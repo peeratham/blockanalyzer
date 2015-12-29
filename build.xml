@@ -1,0 +1,28 @@
+<project name="blockanalyzer-compile" default="jar" basedir=".">
+   <target name="init">
+      <property name="sourceDir" value="src"/>
+      <property name="outputDir" value="build/classes" />
+      <property name="buildDir" value="build/jar" />
+      <property name="lib.dir" value="lib"/>
+
+      <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+      </path>
+   </target>
+   <target name="clean" depends="init">
+      <delete dir="${outputDir}" />
+      <delete dir="${buildDir}" />
+   </target>
+   <target name="prepare" depends="clean">
+      <mkdir dir="${outputDir}" />
+      <mkdir dir="${buildDir}"/>
+   </target>
+   <target name="compile" depends="prepare">
+     <javac srcdir="${sourceDir}" destdir="${outputDir}" classpathref="classpath" />
+   </target>
+   <target name="jar"  depends="compile">
+        
+        <jar destfile="${buildDir}/analyzer.jar" basedir="${outputDir}">
+        </jar>
+   </target>
+</project>
