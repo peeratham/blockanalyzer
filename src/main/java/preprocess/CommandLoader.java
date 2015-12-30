@@ -68,11 +68,6 @@ public class CommandLoader {
 			ClassLoader cl = ClassLoader.getSystemClassLoader();
 			InputStream in = cl.getResourceAsStream("main/resources/commands_src.json");
 		
-	        URL[] urls = ((URLClassLoader)cl).getURLs();
-
-	        for(URL url: urls){
-	        	System.out.println(url.getFile());
-	        }
 	        
 			
 			if(in !=null){
