@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +65,22 @@ public class CommandLoader {
 		JSONParser jsonParser = new JSONParser();
         Object obj = null;
 		try {
-			InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("main/resources/commands_src.json");
-			obj = jsonParser.parse((new BufferedReader(new InputStreamReader(in))));
+			ClassLoader cl = ClassLoader.getSystemClassLoader();
+			InputStream in = cl.getResourceAsStream("main/resources/commands_src.json");
+		
+	        URL[] urls = ((URLClassLoader)cl).getURLs();
+
+	        for(URL url: urls){
+	        	System.out.println(url.getFile());
+	        }
+	        
+			
+			if(in !=null){
+				obj = jsonParser.parse((new BufferedReader(new InputStreamReader(in))));
+			} else {
+				System.out.println("null input");
+			}
+			
 		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

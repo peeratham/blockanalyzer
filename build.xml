@@ -18,11 +18,13 @@
       <mkdir dir="${buildDir}"/>
    </target>
    <target name="compile" depends="prepare">
-     <javac srcdir="${sourceDir}" destdir="${outputDir}" classpathref="classpath" />
+     	<javac srcdir="${sourceDir}" destdir="${outputDir}" classpathref="classpath" />
    </target>
    <target name="jar"  depends="compile">
-        
         <jar destfile="${buildDir}/analyzer.jar" basedir="${outputDir}">
+        	<fileset dir="${sourceDir}">
+        	      <include name="**/*.json"/>
+        	</fileset>
         </jar>
    </target>
 </project>
