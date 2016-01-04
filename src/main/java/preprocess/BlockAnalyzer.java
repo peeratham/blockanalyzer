@@ -68,12 +68,13 @@ public class BlockAnalyzer {
 		Visitor v = new BlockCounter();
 		blockAnalyzer.setVisitor(new DownUp(v, new Stop(), new Identity()));
 		try {
-			blockAnalyzer.setStringInput(Util.readFile("dat/project03.json"));
+			blockAnalyzer.setStringInput(Util.readFile("src/main/resources/project03.json"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		blockAnalyzer.analyze();
+		System.out.println(blockAnalyzer.getProject().projectID);
 		System.out.println(((BlockCounter)v).getCount());
 	}
 }

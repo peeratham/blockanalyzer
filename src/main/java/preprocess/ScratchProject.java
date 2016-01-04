@@ -54,6 +54,12 @@ public class ScratchProject implements Visitable{
 			project.addScriptable("Stage", stage);
 		}
 		
+		if(stageObj.containsKey("info")){
+			JSONObject infoObj = (JSONObject)stageObj.get("info");
+			int projectID = Integer.parseInt((String)((JSONObject)infoObj).get("projectID"));
+			project.setProjectID(projectID);
+		}
+		
 		JSONArray children = (JSONArray)jsonObject.get("children");
 		for (int i = 0; i < children.size(); i++) {
 			JSONObject sprite = (JSONObject) children.get(i);
@@ -71,6 +77,11 @@ public class ScratchProject implements Visitable{
 			project.addScriptable(spriteName, s);
 		}
 		return project;
+	}
+
+	private void setProjectID(int projectID) {
+		this.projectID = projectID;
+		
 	}
 
 	public Map<String, Scriptable> getScriptables() {
