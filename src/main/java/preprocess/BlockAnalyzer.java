@@ -59,6 +59,10 @@ public class BlockAnalyzer {
 		}
 	}
 	
+	public ScratchProject getProject(){
+		return project;
+	}
+	
 	public static void main(String[] args){
 		BlockAnalyzer blockAnalyzer = new BlockAnalyzer();
 		Visitor v = new BlockCounter();

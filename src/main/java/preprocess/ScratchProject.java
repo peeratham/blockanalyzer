@@ -13,6 +13,10 @@ import org.json.simple.JSONObject;
 public class ScratchProject implements Visitable{
 	int projectID;
 	private Map<String, Scriptable> scriptables;
+	
+	public int getProjectID(){
+		return projectID;
+	}
 
 	public void addScriptable(String name, Scriptable obj) {
 		this.scriptables.put(name, obj);
