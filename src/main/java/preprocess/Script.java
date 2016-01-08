@@ -28,7 +28,10 @@ public class Script implements Visitable {
 	public void setPosition(int x, int y) {
 		this.xPos = x;
 		this.yPos = y;
-		
+	}
+	
+	public int[] getPosition(){
+		return new int[]{xPos,yPos};
 	}
 
 	public void setBlocks(List<Block> blocks) {

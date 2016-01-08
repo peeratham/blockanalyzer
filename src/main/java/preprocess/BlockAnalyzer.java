@@ -37,23 +37,21 @@ public class BlockAnalyzer {
 		}
 	}
 
-	public void setInputPath(String path){
-		try {
-            Object obj = jsonParser.parse(new FileReader(
-                    path));
-            JSONObject jsonObject = (JSONObject) obj;
-            project = ScratchProject.loadProject(jsonObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-	}
+//	public void setInputPath(String path){
+//		try {
+//            Object obj = jsonParser.parse(new FileReader(
+//                    path));
+//            JSONObject jsonObject = (JSONObject) obj;
+//            project = ScratchProject.loadProject(jsonObject);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//	}
 	
 	public void setStringInput(String input){
 		this.input = input;
 		try {
-			Object obj = jsonParser.parse(input);
-			JSONObject jsonObject = (JSONObject) obj;
-            project = ScratchProject.loadProject(jsonObject);
+            project = ScratchProject.loadProject(input);
 		} catch (Exception e){
 			e.printStackTrace();
 		}

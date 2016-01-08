@@ -17,6 +17,14 @@ public class BlockSpec {
 		this.defaults = defaults;
 	}
 
+	public String getShape() {
+		return shape;
+	}
+
+	public String getSpec() {
+		return spec;
+	}
+
 	@Override
 	public String toString() {
 		return "BlockSpec [category=" + category + ", shape=" + shape

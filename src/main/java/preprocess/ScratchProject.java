@@ -9,6 +9,8 @@ import main.java.visitor.Visitor;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class ScratchProject implements Visitable{
 	int projectID;
@@ -36,6 +38,14 @@ public class ScratchProject implements Visitable{
 	@Override
 	public String toString() {
 		return "ScratchProject [scriptables=" + scriptables + "]";
+	}
+
+	public static ScratchProject loadProject(String jsonInputString) throws ParseException {
+		JSONParser jsonParser = new JSONParser();
+		Object obj = jsonParser.parse(jsonInputString);
+		JSONObject jsonObject = (JSONObject) obj;
+		
+		return loadProject(jsonObject);
 	}
 
 	public static ScratchProject loadProject(JSONObject jsonObject) {

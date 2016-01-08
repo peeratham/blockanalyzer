@@ -1,5 +1,7 @@
 package main.java.visitor;
 
+import java.util.Stack;
+
 public class DownUp extends Sequence {
 	public DownUp(Visitor down, Visitor stop, Visitor up) {
 		super(null, up);
