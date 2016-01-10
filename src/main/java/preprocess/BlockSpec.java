@@ -24,6 +24,8 @@ public class BlockSpec {
 	public String getSpec() {
 		return spec;
 	}
+	
+	
 
 	@Override
 	public String toString() {
