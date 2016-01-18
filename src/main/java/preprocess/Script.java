@@ -8,7 +8,6 @@ import main.java.visitor.Visitor;
 public class Script implements Visitable {
 
 	private List<Block> blocks;
-	private String position;
 	private int xPos;
 	private int yPos;
 

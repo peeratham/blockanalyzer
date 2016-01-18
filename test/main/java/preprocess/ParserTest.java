@@ -66,7 +66,10 @@ public class ParserTest {
 		
 		next = next.getNextBlock();
 		assertEquals(next.getCommand(), "changeGraphicEffect:by:");
-		
+	}
+	
+	@Test
+	public void testIfThenElse(){
 		
 	}
 

@@ -64,9 +64,12 @@ public class UnreachableCodeAnalyzer extends BaseAnalyzer {
 				if(block.getCommand().contains("whenIReceive")){
 					List<String> args = (List<String>) block.getArgs();
 					if (!messages.contains(args.get(0))){
+						
+						String fullPath = "";
 						for(String elm: path) { 
-							System.out.println(elm);
+							fullPath +=elm+"/";
 						}
+						System.out.println(fullPath);
 					}
 				}
 				throw new VisitFailure();
