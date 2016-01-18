@@ -15,6 +15,7 @@ import org.json.simple.parser.ParseException;
 public class ScratchProject implements Visitable{
 	int projectID;
 	private Map<String, Scriptable> scriptables;
+	static Parser parser;
 	
 	public int getProjectID(){
 		return projectID;
@@ -26,7 +27,7 @@ public class ScratchProject implements Visitable{
 
 	public ScratchProject(){
 		scriptables = new HashMap<String,Scriptable>();
-		
+		parser = new Parser();
 	}
 	
 	public Scriptable getScriptable(String name) {
@@ -57,7 +58,7 @@ public class ScratchProject implements Visitable{
 			JSONArray stageScripts = (JSONArray)stageObj.get("scripts");
 			Scriptable stage = new Scriptable();
 			for (int j = 0; j < stageScripts.size(); j++) {
-				Script scrpt = Parser.loadScript(stageScripts.get(j));
+				Script scrpt = parser.loadScript(stageScripts.get(j));
 				stage.setName("Stage");
 				stage.addScript(scrpt);
 			}
@@ -80,7 +81,7 @@ public class ScratchProject implements Visitable{
 			String spriteName = (String)sprite.get("objName");
 			JSONArray scripts = (JSONArray)sprite.get("scripts");
 			for (int j = 0; j < scripts.size(); j++) {
-				Script scrpt = Parser.loadScript(scripts.get(j));
+				Script scrpt = parser.loadScript(scripts.get(j));
 				s.setName(spriteName);
 				s.addScript(scrpt);
 			}

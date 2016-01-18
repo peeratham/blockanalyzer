@@ -54,6 +54,12 @@ public class All implements Visitor{
 	}
 
 	@Override
-	public void visitBlock(Block block) throws VisitFailure{}
-
+	public void visitBlock(Block block) throws VisitFailure{
+		if(block.hasNestedBlocks()){
+			block.getFirstChild().accept(v);
+		}
+		if(block.getNextBlock()!=null){
+			block.getNextBlock().accept(v);
+		}
+	}
 }

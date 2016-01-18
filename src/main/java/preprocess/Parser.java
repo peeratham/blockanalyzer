@@ -15,9 +15,11 @@ import org.json.simple.parser.JSONParser;
 
 
 public class Parser {
-//	public static ScratchProject project = new ScratchProject();
+	public Parser(){
+		CommandLoader.loadCommand();
+	}
 
-	public static Script loadScript(Object s) {
+	public Script loadScript(Object s) {
 		Script script = new Script();
 		JSONArray scriptArray = (JSONArray)s;
 		int x = ((Long)scriptArray.remove(0)).intValue();
@@ -28,16 +30,24 @@ public class Parser {
 		
 		List<Block> blocks = new ArrayList<Block>();
 		
-        for (int i = 0; i < jsonBlocks.size(); i++)
-        {
-        	blocks.add(loadBlock(jsonBlocks.get(i)));
+		Block previous = loadBlock(jsonBlocks.get(0));
+		blocks.add(previous);	//		add first block
+		
+        for (int i = 1; i < jsonBlocks.size(); i++)
+        {	
+        	Block current  = loadBlock(jsonBlocks.get(i));
+        	previous.setNextBlock(current);
+        	blocks.add(current);
+        	previous = current;	
+        	
         }
         script.setBlocks(blocks);
         return script;
 	}
 	
-	public static Block loadBlock(Object b){
+	public Block loadBlock(Object b){
 		JSONArray blockArray = (JSONArray)b;
+		Block result = new Block();
 		
 		ArrayList<Object> args = new ArrayList<Object>();
 
@@ -46,23 +56,41 @@ public class Parser {
 		
 		Object arg = null;
 		for (int argi = 0; argi < blockArray.size(); argi++) {
-			if(blockArray.get(argi) instanceof JSONArray){	
+			if(blockArray.get(argi) instanceof JSONArray){
 				if(((JSONArray)blockArray.get(argi)).get(0) instanceof JSONArray){	//nested blocks
+					result.hasNestedBlocks(true);
 					arg = new ArrayList<Block>();//stack shape insert (nested blocks) will be list of blocks
 					JSONArray blocks = (JSONArray)blockArray.get(argi);	//it's a list of blocks
-					for (int argj = 0; argj < blocks.size(); argj++) {
-						((List)arg).add(loadBlock(blocks.get(argj)));
+					
+					Block previous = loadBlock(blocks.get(0));
+					((List)arg).add(previous);	//		add first block
+					result.setFirstChild(previous);
+					
+					for (int argj = 1; argj < blocks.size(); argj++) {
+						Block current  = loadBlock(blocks.get(argj));
+			        	previous.setNextBlock(current);
+			        	((List)arg).add(current);
+			        	previous = current;	
+//						((List)arg).add(loadBlock(blocks.get(argj)));
 					}
+					result.setNestedBlocks(arg);
+					
 				}else{
 					arg = loadBlock(blockArray.get(argi)); //block
 				}
 			}else{
 				arg = blockArray.get(argi); //primitive
 			}
+			
 			args.add(arg);	
 		}
 		
-		return new Block(command,blockSpec,args);
+		result.setCommand(command);
+		result.setBlockSpec(blockSpec);
+		result.setArgs(args);
+		
+		return result;
+//		return new Block(command,blockSpec,args);
 	}
 }
 

@@ -11,9 +11,9 @@ import org.junit.Test;
 
 public class BlockTest {
 	JSONParser jsonParser = new JSONParser();
+	Parser parser = new Parser();
 	@Before
 	public void setUp() throws Exception {
-		CommandLoader.loadCommand();
 	}
 
 	@After
@@ -24,7 +24,7 @@ public class BlockTest {
 	public void testStringifyNoBlockKind() throws ParseException {
 		String input = "[\"say:duration:elapsed:from:\", \"Hello!\", 2]";
 		JSONArray jsonInput = (JSONArray) jsonParser.parse(input);
-		Block b = Parser.loadBlock(jsonInput);
+		Block b = parser.loadBlock(jsonInput);
 		assertEquals(b.toString(), "say \"Hello!\" for 2 secs");
 		
 	}
@@ -33,7 +33,7 @@ public class BlockTest {
 	public void testStringifyWithBlockKind() throws ParseException {
 		String input = "[\"changeGraphicEffect:by:\", \"color\", 25]";
 		JSONArray jsonInput = (JSONArray) jsonParser.parse(input);
-		Block b = Parser.loadBlock(jsonInput);
+		Block b = parser.loadBlock(jsonInput);
 		assertEquals(b.toString(), "change \"color\" effect by 25");
 	}
 	
@@ -41,7 +41,7 @@ public class BlockTest {
 	public void testStringifyOnNestedBlock() throws ParseException {
 		String input = "[\"doIf\", [\"<\", \"1\", \"2\"], [[\"broadcast:\", \"message1\"], [\"changeGraphicEffect:by:\", \"color\", 25]]]";
 		JSONArray jsonInput = (JSONArray) jsonParser.parse(input);
-		Block b = Parser.loadBlock(jsonInput);
+		Block b = parser.loadBlock(jsonInput);
 		String expectResult = "if (\"1\" < \"2\") then\n    broadcast \"message1\"\n    change \"color\" effect by 25\nend";
 		assertEquals(b.toString(), expectResult);
 	}
@@ -55,9 +55,30 @@ public class BlockTest {
 				+ "[\"changeGraphicEffect:by:\", \"color\", 25]]],"
 				+ "\n\t  [\"changeGraphicEffect:by:\", \"color\", 25]]]";
 		JSONArray jsonInput = (JSONArray) jsonParser.parse(input);
-		Block b = Parser.loadBlock(jsonInput);
+		Block b = parser.loadBlock(jsonInput);
 		
 		String expectResult = "if (\"1\" < \"2\") then\n    broadcast \"message1\"\n    if (\"1\" < \"2\") then\n        broadcast \"message1\"\n        change \"color\" effect by 25\n    end\n    change \"color\" effect by 25\nend";
 		assertEquals(b.toString(), expectResult);
 	}
+	
+	@Test
+	public void testBlockEquals() throws ParseException {
+		String inputRHS = "[\"say:duration:elapsed:from:\", \"Hello!\", 2]";
+		JSONArray jsonInputRHS = (JSONArray) jsonParser.parse(inputRHS);
+		Block rhs = parser.loadBlock(jsonInputRHS);
+		
+		String inputLHS = "[\"say:duration:elapsed:from:\", \"Hello!\", 2]";
+		JSONArray jsonInputLHS = (JSONArray) jsonParser.parse(inputLHS);
+		Block lhs = parser.loadBlock(jsonInputLHS);
+		
+		assertEquals(lhs, rhs);
+	}
+	
+	@Test
+	public void testNestedBlockEquals() throws ParseException {
+		//TODO add testNestedBlockEquals()
+	}
+	
+	
+	
 }

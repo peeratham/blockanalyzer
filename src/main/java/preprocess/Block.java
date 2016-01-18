@@ -16,14 +16,38 @@ public class Block implements Visitable {
 	private String command;
 	private ArrayList<Object> args;
 	private BlockSpec blockSpec;
+	private Block nextBlock;
+	private Block previousBlock;
+	private boolean hasNestedBlocks = false;
+	private Block firstChild;
+	private List<Block> nestedBlocks;
 
+	public Block() {
+	}
 
+	public Block getNextBlock() {
+		return nextBlock;
+	}
+
+	public void setNextBlock(Block nextBlock) {
+		this.nextBlock = nextBlock;
+	}
+
+	public Block getPreviousBlock() {
+		return previousBlock;
+	}
+
+	public void setPreviousBlock(Block previousBlock) {
+		this.previousBlock = previousBlock;
+	}
 
 	public Block(String command, BlockSpec blockSpec, ArrayList<Object> args) {
 		this.command = command;
 		this.args = args;
 		this.blockSpec = blockSpec;
 	}
+
+	
 
 	public BlockSpec getBlockSpec() {
 		return blockSpec;
@@ -36,11 +60,7 @@ public class Block implements Visitable {
 	
 	private String stringify(Block obj) {
 		String pattern = "(%.(?:\\.[A-z]+)?)";	//http://www.regexplanet.com/advanced/java/index.html
-//		Pattern r = Pattern.compile(pattern);
-//		Matcher m = r.matcher(blockSpec.getSpec());
-//		while (m.find()) {
-//			System.out.println(m.group());
-//		}
+
 
 		pattern = "%[A-z]\\.[A-z]+|%[A-z]";		
 		String fmt = obj.getBlockSpec().getSpec().replaceAll(pattern, "%s");
@@ -80,7 +100,6 @@ public class Block implements Visitable {
 		}
 		String[] result = argString.toArray(new String[argString.size()]);
 		String formattedString = String.format(fmt,result);
-//		System.out.println(formattedString);
 		
 		return formattedString;
 		
@@ -102,6 +121,78 @@ public class Block implements Visitable {
 	public void accept(Visitor v) throws VisitFailure {
 		v.visitBlock(this);
 		
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj==null) {return false;}		
+		if(obj==this){return true;}
+		if (obj.getClass() != getClass()) {
+		     return false;
+		   }
+		
+		Block rhs = (Block) obj;
+		Block lhs = this;
+		
+		if (!rhs.getCommand().equals(lhs.getCommand())){
+			return false;
+		}else {
+			boolean success = true;
+			List<Object> lhsArgs = (List<Object>) lhs.getArgs();
+			List<Object> rhsArgs = (List<Object>) rhs.getArgs();
+			if(lhsArgs.size()==rhsArgs.size()){
+				for (int i = 0; i < lhsArgs.size(); i++) {
+					success = lhs.args.get(i)==rhs.args.get(i);
+				}
+			}
+			return success;
+		}
+		
+		
+		
+		
+	}
+
+	public void setCommand(String command) {
+		this.command = command;
+		
+	}
+
+	public void setBlockSpec(BlockSpec blockSpec) {
+		this.blockSpec = blockSpec;
+		
+	}
+
+	public void setArgs(ArrayList<Object> args) {
+		this.args = args;
+		
+	}
+
+	public void hasNestedBlocks(boolean b) {
+		this.hasNestedBlocks = b;
+		
+	}
+	
+	public boolean hasNestedBlocks() {
+		return this.hasNestedBlocks;
+		
+	}
+
+	public void setFirstChild(Block previous) {
+		this.firstChild = previous;
+	}
+	
+	public Block getFirstChild() {
+		return this.firstChild;
+	}
+
+	public void setNestedBlocks(Object arg) {
+		this.nestedBlocks = (List<Block>) arg;
+		
+	}
+	
+	public List<Block> getNestedBlocks(){
+		return nestedBlocks;
 	}
 
 }
