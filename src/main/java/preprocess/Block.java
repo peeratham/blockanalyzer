@@ -74,7 +74,7 @@ public class Block implements Visitable {
 				}else if(o instanceof Long){
 					argString.add(o+"");
 				}else if(o instanceof Block){
-					if(((Block) o).blockSpec.getShape().equals("boolean")){
+					if(((Block) o).blockSpec !=null && ((Block) o).blockSpec.getShape().equals("boolean")){
 						argString.add("("+o+")");
 					}else{
 						argString.add(o.toString());

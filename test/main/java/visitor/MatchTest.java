@@ -29,7 +29,7 @@ public class MatchTest {
 	}
 
 	@Test
-	public void testBasicMatcher() throws ParseException, VisitFailure {
+	public void testBasicMatcher() throws Exception {
 		String patternInput = "[57,161,[[\"whenGreenFlag\"],[\"say:duration:elapsed:from:\", \"message\", \"sec\"]]]";
 		JSONArray patternJsonInput = (JSONArray) jsonParser.parse(patternInput);
 		Script pattern = parser.loadScript(patternJsonInput);
@@ -48,7 +48,7 @@ public class MatchTest {
 	}
 	
 	@Test
-	public void testMatchRecursivelyInNestedBlock() throws ParseException, VisitFailure{
+	public void testMatchRecursivelyInNestedBlock() throws Exception{
 		String patternInput = "[339,268,[[\"broadcast:\",\"MESSAGE\"],[\"changeGraphicEffect:by:\",\"EFFECT\",25]]]";
 		JSONArray patternJsonInput = (JSONArray) jsonParser.parse(patternInput);
 		Script pattern = parser.loadScript(patternJsonInput);

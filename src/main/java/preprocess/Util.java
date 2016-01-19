@@ -5,13 +5,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+
 public class Util {
+	public static final String baseDownLoadURL = "http://projects.scratch.mit.edu/internalapi/project/%1$d/get/";
+	
+	
 		public static String readFile(String path) throws IOException {
 			  byte[] encoded = Files.readAllBytes(Paths.get(path));
 			  return new String(encoded, StandardCharsets.UTF_8);
@@ -62,6 +68,14 @@ public class Util {
 		    return listOfFiles;
 		}
 		
+
+		
+		public static String retrieveProjectOnline(int projectID) throws IOException{
+			
+			String URL = String.format(baseDownLoadURL,projectID);
+			String doc = Jsoup.connect(URL).ignoreContentType(true).execute().body();
+			return doc;
+		}
 		
 		
 

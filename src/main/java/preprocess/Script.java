@@ -21,7 +21,12 @@ public class Script implements Visitable {
 
 	@Override
 	public String toString() {
-		return "Script [script=" + blocks + ", position=" + xPos +","+yPos+ "]";
+		String header = "Script@(x:" + xPos +", y:"+yPos+ ")\n";
+		String content = "";
+		for(Block b: blocks){
+			content += b+"\n";
+		}
+		return header+content;
 	}
 
 	public void setPosition(int x, int y) {

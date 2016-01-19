@@ -242,6 +242,11 @@
 	 ["x scroll", "r", 99, "xScroll"],
 	 ["y scroll", "r", 99, "yScroll"],
 	 ["hide all sprites", " ", 99, "hideAll"],
-	 ["user id", "r", 99, "getUserId"]
+	 ["user id", "r", 99, "getUserId"],
+	 ["%x.var", "r", 9, "readVariable", "var"],
+	 ["%x.list", "r", 12, "contentsOfList:", "list"],
+	 ["%x", "r", 10, "getParam", "param"],
+	 ["define %Z", "h", 10, "procDef"],
+	 ["%Z", " ", 10, "call"],
 	]
 }

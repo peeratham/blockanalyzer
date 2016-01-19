@@ -2,10 +2,12 @@ package main.java.preprocess;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +16,7 @@ public class ParserTest {
 	
 	JSONParser jsonParser = new JSONParser();
 	Parser parser = new Parser();
+	ScratchProject project;
 
 	@Before
 	public void setUp() throws Exception {
@@ -21,6 +24,8 @@ public class ParserTest {
 
 	@After
 	public void tearDown() throws Exception {
+		parser = null;
+		project = null;
 	}
 	
 	@Test
@@ -69,8 +74,10 @@ public class ParserTest {
 	}
 	
 	@Test
-	public void testIfThenElse(){
-		
+	public void testIfThenElse() throws IOException, ParseException{
+		String stringInput = Util.retrieveProjectOnline(43026762);
+		project = new ScratchProject().loadProject(stringInput);
+//		System.out.println(project.getScriptable("Sprite1").getScript(0));
 	}
 
 }

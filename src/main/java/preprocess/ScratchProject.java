@@ -58,9 +58,15 @@ public class ScratchProject implements Visitable{
 			JSONArray stageScripts = (JSONArray)stageObj.get("scripts");
 			Scriptable stage = new Scriptable();
 			for (int j = 0; j < stageScripts.size(); j++) {
-				Script scrpt = parser.loadScript(stageScripts.get(j));
-				stage.setName("Stage");
-				stage.addScript(scrpt);
+				Script scrpt=null;
+				try{
+					scrpt = parser.loadScript(stageScripts.get(j));
+					stage.setName("Stage");
+					stage.addScript(scrpt);
+				} catch(Exception e){
+					System.err.println("Error Parsing Scriptable: Stage");
+					System.err.println(e);
+				}
 			}
 			project.addScriptable("Stage", stage);
 		}
@@ -81,9 +87,15 @@ public class ScratchProject implements Visitable{
 			String spriteName = (String)sprite.get("objName");
 			JSONArray scripts = (JSONArray)sprite.get("scripts");
 			for (int j = 0; j < scripts.size(); j++) {
-				Script scrpt = parser.loadScript(scripts.get(j));
-				s.setName(spriteName);
-				s.addScript(scrpt);
+				Script scrpt=null;
+				try{
+					scrpt = parser.loadScript(scripts.get(j));
+					s.setName(spriteName);
+					s.addScript(scrpt);
+				}catch(Exception e){
+					System.err.println("Error Parsing Scriptable:"+spriteName);
+					e.printStackTrace();
+				}
 			}
 			project.addScriptable(spriteName, s);
 		}

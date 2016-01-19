@@ -19,23 +19,33 @@ public class Parser {
 		CommandLoader.loadCommand();
 	}
 
-	public Script loadScript(Object s) {
+	public Script loadScript(Object s) throws Exception {
 		Script script = new Script();
 		JSONArray scriptArray = (JSONArray)s;
-		int x = ((Long)scriptArray.remove(0)).intValue();
-		int y = ((Long)scriptArray.remove(0)).intValue();
+		int x = ((Number)scriptArray.remove(0)).intValue();
+		int y = ((Number)scriptArray.remove(0)).intValue();
 		
 		script.setPosition(x,y);
 		JSONArray jsonBlocks = (JSONArray) scriptArray.remove(0);
 		
 		List<Block> blocks = new ArrayList<Block>();
 		
-		Block previous = loadBlock(jsonBlocks.get(0));
+		Block previous = null;
+		try{
+			previous = loadBlock(jsonBlocks.get(0));
+		} catch(Exception e){
+			throw new ParsingException("Error Parsing Block:"+e);
+		}
 		blocks.add(previous);	//		add first block
 		
         for (int i = 1; i < jsonBlocks.size(); i++)
         {	
-        	Block current  = loadBlock(jsonBlocks.get(i));
+        	Block current = null;
+        	try{
+        		current = loadBlock(jsonBlocks.get(i));
+        	} catch (Exception e){
+        		throw new ParsingException("Error Parsing Block:"+e);
+        	}
         	previous.setNextBlock(current);
         	blocks.add(current);
         	previous = current;	
@@ -45,7 +55,7 @@ public class Parser {
         return script;
 	}
 	
-	public Block loadBlock(Object b){
+	public Block loadBlock(Object b) throws Exception{
 		JSONArray blockArray = (JSONArray)b;
 		Block result = new Block();
 		
@@ -62,12 +72,22 @@ public class Parser {
 					arg = new ArrayList<Block>();//stack shape insert (nested blocks) will be list of blocks
 					JSONArray blocks = (JSONArray)blockArray.get(argi);	//it's a list of blocks
 					
-					Block previous = loadBlock(blocks.get(0));
+					Block previous = null;
+					try{
+						previous = loadBlock(blocks.get(0));
+					} catch(Exception e){
+						throw new ParsingException("Error Parsing Block:"+e);
+					}
 					((List)arg).add(previous);	//		add first block
 					result.setFirstChild(previous);
 					
 					for (int argj = 1; argj < blocks.size(); argj++) {
-						Block current  = loadBlock(blocks.get(argj));
+						Block current  = null;
+						try{
+							current = loadBlock(blocks.get(argj));
+						}catch(Exception e){
+							throw new ParsingException("Error Parsing Block:"+e);
+						}
 			        	previous.setNextBlock(current);
 			        	((List)arg).add(current);
 			        	previous = current;	
@@ -76,7 +96,11 @@ public class Parser {
 					result.setNestedBlocks(arg);
 					
 				}else{
-					arg = loadBlock(blockArray.get(argi)); //block
+					try{
+						arg = loadBlock(blockArray.get(argi)); //block
+					}catch(Exception e){
+						throw new ParsingException("Error Parsing Block:"+blockArray);
+					}
 				}
 			}else{
 				arg = blockArray.get(argi); //primitive
@@ -90,7 +114,7 @@ public class Parser {
 		result.setArgs(args);
 		
 		return result;
-//		return new Block(command,blockSpec,args);
+
 	}
 }
 

@@ -21,7 +21,7 @@ public class BlockTest {
 	}
 
 	@Test
-	public void testStringifyNoBlockKind() throws ParseException {
+	public void testStringifyNoBlockKind() throws Exception {
 		String input = "[\"say:duration:elapsed:from:\", \"Hello!\", 2]";
 		JSONArray jsonInput = (JSONArray) jsonParser.parse(input);
 		Block b = parser.loadBlock(jsonInput);
@@ -30,7 +30,7 @@ public class BlockTest {
 	}
 	
 	@Test
-	public void testStringifyWithBlockKind() throws ParseException {
+	public void testStringifyWithBlockKind() throws Exception {
 		String input = "[\"changeGraphicEffect:by:\", \"color\", 25]";
 		JSONArray jsonInput = (JSONArray) jsonParser.parse(input);
 		Block b = parser.loadBlock(jsonInput);
@@ -38,7 +38,7 @@ public class BlockTest {
 	}
 	
 	@Test
-	public void testStringifyOnNestedBlock() throws ParseException {
+	public void testStringifyOnNestedBlock() throws Exception {
 		String input = "[\"doIf\", [\"<\", \"1\", \"2\"], [[\"broadcast:\", \"message1\"], [\"changeGraphicEffect:by:\", \"color\", 25]]]";
 		JSONArray jsonInput = (JSONArray) jsonParser.parse(input);
 		Block b = parser.loadBlock(jsonInput);
@@ -47,7 +47,7 @@ public class BlockTest {
 	}
 
 	@Test
-	public void testToStringOnDoubleNestedBlock() throws ParseException {
+	public void testToStringOnDoubleNestedBlock() throws Exception {
 		String input = "[\"doIf\", [\"<\", \"1\", \"2\"], \n  "
 				+ "[[\"broadcast:\", \"message1\"],\n  "
 				+ "[\"doIf\", [\"<\", \"1\", \"2\"], \n    "
@@ -62,7 +62,7 @@ public class BlockTest {
 	}
 	
 	@Test
-	public void testBlockEquals() throws ParseException {
+	public void testBlockEquals() throws Exception {
 		String inputRHS = "[\"say:duration:elapsed:from:\", \"Hello!\", 2]";
 		JSONArray jsonInputRHS = (JSONArray) jsonParser.parse(inputRHS);
 		Block rhs = parser.loadBlock(jsonInputRHS);
