@@ -1,5 +1,6 @@
 package main.java.preprocess;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import main.java.visitor.VisitFailure;
@@ -13,7 +14,11 @@ public class Script implements Visitable {
 
 	
 	
-	public Script() {}
+	public Script() {
+		blocks = new ArrayList();
+		xPos = 0;
+		yPos = 0;
+	}
 
 	public List<Block> getBlocks(){
 		return blocks;

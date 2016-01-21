@@ -61,8 +61,30 @@ public class Parser {
 		
 		ArrayList<Object> args = new ArrayList<Object>();
 
-		String command = (String) blockArray.remove(0);
-		BlockSpec blockSpec = CommandLoader.COMMAND_TO_BLOCK.get(command);
+		String command = (String) blockArray.get(0);
+		BlockSpec blockSpec;
+		
+		
+		if(command.equals("call")){ // CustomBlockType call
+			blockSpec = CommandLoader.COMMAND_TO_CUSTOM_BLOCKSPEC.get((String) blockArray.remove(1));			
+		} else{
+			blockSpec = CommandLoader.COMMAND_TO_BLOCKSPEC.get(command);
+		}
+		
+		if(command.equals("procDef")){	//CustomBlock
+			Block customBlockArg = new Block();
+			BlockSpec customBlockSpec = BlockSpec.parseCustomBlockSpec(blockArray);
+			CommandLoader.COMMAND_TO_CUSTOM_BLOCKSPEC.put((String) blockArray.get(1), customBlockSpec);
+			customBlockArg.setCommand(command);
+			customBlockArg.setBlockSpec(customBlockSpec);
+			args.add(customBlockArg);
+			result.setCommand(command);
+			result.setBlockSpec(blockSpec);
+			result.setArgs(args);
+			return result;
+		}
+		blockArray.remove(0);
+		
 		
 		Object arg = null;
 		for (int argi = 0; argi < blockArray.size(); argi++) {

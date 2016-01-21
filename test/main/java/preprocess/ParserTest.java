@@ -1,11 +1,14 @@
 package main.java.preprocess;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.After;
@@ -74,10 +77,70 @@ public class ParserTest {
 	}
 	
 	@Test
-	public void testIfThenElse() throws IOException, ParseException{
-		String stringInput = Util.retrieveProjectOnline(43026762);
-		project = new ScratchProject().loadProject(stringInput);
-//		System.out.println(project.getScriptable("Sprite1").getScript(0));
+	public void testCustomBlock() throws IOException, ParseException{
+		boolean test = true; int projectID; if(test){projectID=93160273;}else{projectID=43026762;}
+		String stringInput = Util.retrieveProjectOnline(projectID);
+		project = ScratchProject.loadProject(stringInput);
+		System.out.println(project.getScriptable("TestCustomBlock"));
+		
+	}
+	
+	@Test
+	public void testNestedToString() throws Exception{
+		boolean test = true; int projectID; if(test){projectID=93160273;}else{projectID=43026762;}
+		
+		String stringInput = Util.retrieveProjectOnline(projectID); //real:43026762, test:93160273
+		JSONArray scriptableInput = getScriptable(stringInput,"testNestedToString");
+		Script script = parser.loadScript(scriptableInput.get(0));
+		int endCount = 	count("end", script.toString());
+		assertEquals(endCount,2);
+		int elseCount = 	count("else", script.toString());
+		assertEquals(elseCount,1);
+	}
+	
+	@Test
+	public void testForever() throws Exception {
+		boolean test = true; int projectID; if(test){projectID=93160273;}else{projectID=43026762;}
+		String stringInput = Util.retrieveProjectOnline(projectID); //real:43026762, test:93160273
+		JSONArray scriptableInput = getScriptable(stringInput,"testForever");
+		Script script = parser.loadScript(scriptableInput.get(0));
+		System.out.println(script);
+	}
+	
+	@Test
+	public void test() throws Exception {
+		boolean test = false; int projectID; if(test){projectID=93160273;}else{projectID=43026762;}
+		String stringInput = Util.retrieveProjectOnline(projectID); //real:43026762, test:93160273
+		project = ScratchProject.loadProject(stringInput);
+		System.out.println(project);
+	}
+
+	private JSONArray getScriptable(String inputString, String name) throws ParseException {
+		JSONObject jsonObject = (JSONObject) jsonParser.parse(inputString);
+		JSONArray children = (JSONArray)jsonObject.get("children");
+		JSONObject sprite = null;
+		for (int i = 0; i < children.size(); i++) {
+			sprite = (JSONObject) children.get(i);
+			if(!sprite.containsKey("objName")){ //not a sprite
+				continue;
+			}
+			String spriteName = (String)sprite.get("objName");
+			if(spriteName.equals(name)){
+				JSONArray scripts = (JSONArray)sprite.get("scripts");
+				return scripts;
+			}
+		}
+		return null;
+		
+	}
+	
+	public int count(String word, String line){
+	    Pattern pattern = Pattern.compile(word);
+	    Matcher matcher = pattern.matcher(line);
+	    int counter = 0;
+	    while (matcher.find())
+	        counter++;
+	    return counter;
 	}
 
 }

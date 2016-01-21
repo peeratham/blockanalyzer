@@ -30,7 +30,12 @@ public class Scriptable implements Visitable {
 
 	@Override
 	public String toString() {
-		return "Scriptable [scripts=" + scripts + "]";
+		StringBuilder sb = new StringBuilder();
+		for (Script scrpt : scripts) {
+			sb.append(scrpt);
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 	public Script getScript(int index){

@@ -19,7 +19,8 @@ import org.json.simple.parser.ParseException;
 public class CommandLoader {
 	public static Map<String, String> SHAPE_FLAGS = new HashMap<String, String>();
 	public static Map<Integer, String> CATEGORY_IDS = new HashMap<Integer, String>();
-	public static Map<String, BlockSpec> COMMAND_TO_BLOCK = new HashMap<String,BlockSpec>();
+	public static Map<String, BlockSpec> COMMAND_TO_BLOCKSPEC = new HashMap<String,BlockSpec>();
+	public static Map<String, BlockSpec> COMMAND_TO_CUSTOM_BLOCKSPEC = new HashMap<String,BlockSpec>();
 	
 	public static void initShapFlags(){
 		SHAPE_FLAGS.put(" ", "stack");
@@ -101,7 +102,16 @@ public class CommandLoader {
             	List<Object> defaults = blockSpec.subList(4, blockSpec.size());
             	String shape = SHAPE_FLAGS.get(flag);
             	String category = CATEGORY_IDS.get(categoryID);
-            	COMMAND_TO_BLOCK.put(name, new BlockSpec(category, shape, name, spec, defaults));
+            	
+            	
+            	if(flag.contains("c")){
+					spec += "%s";
+				}
+				
+				if(flag.equals("e")){
+					spec += "%s\nelse%s";
+				}
+            	COMMAND_TO_BLOCKSPEC.put(name, new BlockSpec(category, flag, shape, name, spec, defaults));
         	}
         }
         
@@ -109,6 +119,6 @@ public class CommandLoader {
 	
 	public static void main(String[] args){
 		loadCommand();
-		System.out.println(COMMAND_TO_BLOCK);
+		System.out.println(COMMAND_TO_BLOCKSPEC);
 	}
 }

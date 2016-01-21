@@ -1,7 +1,7 @@
 package main.java.preprocess;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 import main.java.visitor.VisitFailure;
@@ -38,7 +38,16 @@ public class ScratchProject implements Visitable{
 
 	@Override
 	public String toString() {
-		return "ScratchProject [scriptables=" + scriptables + "]";
+		StringBuilder sb = new StringBuilder();
+		Iterator it = scriptables.entrySet().iterator();
+		while(it.hasNext()){
+			Map.Entry<String, Scriptable> pair = (Map.Entry<String, Scriptable>)it.next();
+			sb.append(pair.getKey());
+			sb.append("\n");
+			sb.append(pair.getValue());
+			sb.append("\n\n");
+		}
+		return "Project:"+projectID+"\n\n"+sb.toString();
 	}
 
 	public static ScratchProject loadProject(String jsonInputString) throws ParseException {
@@ -78,6 +87,7 @@ public class ScratchProject implements Visitable{
 		}
 		
 		JSONArray children = (JSONArray)jsonObject.get("children");
+		
 		for (int i = 0; i < children.size(); i++) {
 			JSONObject sprite = (JSONObject) children.get(i);
 			if(!sprite.containsKey("objName")){ //not a sprite
@@ -86,14 +96,39 @@ public class ScratchProject implements Visitable{
 			Scriptable s = new Scriptable();
 			String spriteName = (String)sprite.get("objName");
 			JSONArray scripts = (JSONArray)sprite.get("scripts");
+			s.setName(spriteName);
+			if(scripts==null){	//empty script
+				project.addScriptable(spriteName, s);
+				continue;
+			}
+			
+			//parse custom block for each sprite first
+			for (int j = 0; j < scripts.size(); j++) {
+				Script scrpt=null;
+				JSONArray scriptJSON = (JSONArray) ((JSONArray)scripts.get(j)).get(2);
+				JSONArray firstBlockJSON = (JSONArray) scriptJSON.get(0);
+				String command = (String) firstBlockJSON.get(0);
+				
+				if(command.equals("procDef")){
+					try{
+						scrpt = parser.loadScript(scripts.remove(j));
+						s.addScript(scrpt);
+					}catch(Exception e){
+						System.err.println("Error Parsing Custom Block for Scriptable:"+spriteName);
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			//parse script
 			for (int j = 0; j < scripts.size(); j++) {
 				Script scrpt=null;
 				try{
 					scrpt = parser.loadScript(scripts.get(j));
-					s.setName(spriteName);
 					s.addScript(scrpt);
 				}catch(Exception e){
 					System.err.println("Error Parsing Scriptable:"+spriteName);
+					System.err.println("Index:"+j+" json:"+scripts.get(j));
 					e.printStackTrace();
 				}
 			}

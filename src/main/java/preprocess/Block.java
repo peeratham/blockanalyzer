@@ -61,17 +61,20 @@ public class Block implements Visitable {
 	private String stringify(Block obj) {
 		String pattern = "(%.(?:\\.[A-z]+)?)";	//http://www.regexplanet.com/advanced/java/index.html
 
-
 		pattern = "%[A-z]\\.[A-z]+|%[A-z]";		
 		String fmt = obj.getBlockSpec().getSpec().replaceAll(pattern, "%s");
 		
 		
 		ArrayList<Object> args = (ArrayList<Object>) getArgs();
+		if(args == null){
+			args = (ArrayList<Object>) blockSpec.getDefaults();
+		}
 		ArrayList<String> argString = new ArrayList<String>();
+		
 		for(Object o : args){
 				if(o instanceof String){
 					argString.add("\""+o+"\"");
-				}else if(o instanceof Long){
+				}else if(o instanceof Number){
 					argString.add(o+"");
 				}else if(o instanceof Block){
 					if(((Block) o).blockSpec !=null && ((Block) o).blockSpec.getShape().equals("boolean")){
@@ -81,9 +84,13 @@ public class Block implements Visitable {
 					}
 					
 				}else if(o instanceof ArrayList){
-					if(obj.getBlockSpec().getShape().equals("stack")){
-						fmt += "%s";
-					}
+//					if(obj.getBlockSpec().getShape().equals("stack")){
+//						fmt += "%s";
+//					}
+//					
+//					if(obj.getBlockSpec().getFlag().equals("e")){
+//						fmt += "else";
+//					}
 					
 					String nested = "";
 					for(Object el : (ArrayList<Object>)o){
@@ -92,14 +99,21 @@ public class Block implements Visitable {
 					}
 					
 					nested = nested.replace("\n", "\n    ");
-					nested += "\nend";
+//					nested += "\nend";
 					argString.add(nested);
 					
-					
+				}else{
+					argString.add(String.valueOf(o));
 				}
 		}
 		String[] result = argString.toArray(new String[argString.size()]);
 		String formattedString = String.format(fmt,result);
+		if(blockSpec.getFlag()!=null){
+			if(blockSpec.getFlag().equals("e")||blockSpec.getFlag().contains("c")){
+				formattedString += "\nend";
+			}
+		}
+		
 		
 		return formattedString;
 		
